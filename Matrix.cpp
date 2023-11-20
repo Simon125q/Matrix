@@ -5,7 +5,8 @@ using namespace std;
 
 #define ERROR 1
 
-Matrix::Matrix()
+Matrix::Matrix(int cols_num, int rows_num)
+    :columns{cols_num}, rows{rows_num}, elements{new int[columns][rows]} 
 {
 }
 

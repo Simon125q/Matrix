@@ -3,7 +3,10 @@
 class Matrix
 {
 public:
-    Matrix();
+    int **elements;
+    int rows;
+    int columns;
+    Matrix(int cols_num, int rows_num);
     Matrix(const Matrix &other);
     ~Matrix();
     Matrix operator+(const Matrix &other) const;

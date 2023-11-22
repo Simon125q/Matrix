@@ -6,6 +6,7 @@ public:
     int **elements;
     int rows;
     int columns;
+    Matrix();
     Matrix(int cols_num, int rows_num);
     Matrix(const Matrix &other);
     ~Matrix();

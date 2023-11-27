@@ -2,11 +2,12 @@
 
 class Matrix
 {
-public:
-    int **elements;
-    int rows;
     int columns;
-    Matrix();
+    int rows;
+    int **elements;
+public:
+    
+    Matrix(double element);
     Matrix(int cols_num, int rows_num);
     Matrix(const Matrix &other);
     ~Matrix();
@@ -19,11 +20,12 @@ public:
     Matrix &operator=(const Matrix &other);
     bool operator==(const Matrix &other) const;
     bool operator!=(const Matrix &other) const;
+
+    friend std::ostream &operator<<(std::ostream &os, const Matrix &other);
+    friend Matrix operator+(double num, const Matrix &obj);
+    friend Matrix operator-(double num, const Matrix &obj);
+    friend Matrix operator*(double num, const Matrix &obj);
+    friend bool operator==(double num, const Matrix &obj);
+    friend bool operator!=(double num, const Matrix &obj);
 };
 
-std::ostream &operator<<(std::ostream &os, const Matrix &other);
-Matrix operator+(double num, const Matrix &obj);
-Matrix operator-(double num, const Matrix &obj);
-Matrix operator*(double num, const Matrix &obj);
-bool operator==(double num, const Matrix &obj);
-bool operator!=(double num, const Matrix &obj);

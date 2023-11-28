@@ -8,14 +8,14 @@ using namespace std;
 Matrix::Matrix(int cols_num, int rows_num)
     : columns{cols_num}, rows{rows_num}
 {
-    int **elements = new int *[columns];
-    for (int index = 0; index < rows; index++)
+    elements = new int*[rows];
+    for (int index = 0; index<rows; index++)
     {
         elements[index] = new int[columns];
     }
-    for(int col = 0; col < columns; col++)
+    for (int row = 0; row < rows; row++)
     {
-        for(int row = 0; row < rows; row++)
+        for (int col = 0; col < columns; col++)
         {
             elements[row][col] = 0;
         }
@@ -25,29 +25,35 @@ Matrix::Matrix(int cols_num, int rows_num)
 Matrix::Matrix(double element)
     : columns{1}, rows{1}
 {
-    int **elements = new int *[columns];
-    for (int index = 0; index < columns; index++)
+    elements = new int *[rows];
+    for (int index = 0; index < rows; index++)
     {
-        elements[index] = new int[rows];
+        elements[index] = new int[columns];
     }
     elements[0][0] = element;
 }
 
 Matrix::Matrix(const Matrix &other)
 {
-    Matrix(other.columns, other.rows);
-    for (int col = 0; col < columns; col++)
+    for (int index = 0; index < rows; index++)
     {
-        for (int row = 0; row < rows; row++)
+        delete[] elements[index];
+    }
+    delete[] elements;
+    
+    Matrix(other.columns, other.rows);
+    for (int row = 0; row < rows; row++)
+    {
+        for (int col = 0; col < columns; col++)
         {
-            elements[col][row] = other.elements[col][row];
+            elements[row][col] = other.elements[row][col];
         }
     }
 }
 
 Matrix::~Matrix()
 {
-    for (int index = 0; index < columns; index++)
+    for (int index = 0; index < rows; index++)
     {
         delete[] elements[index];
     }
@@ -58,12 +64,12 @@ Matrix Matrix::operator+(const Matrix &other) const
 {
     if (columns == other.columns && rows == other.rows)
     {
-        Matrix result(columns, rows);
-        for (int col = 0; col < columns; col++)
+        Matrix result(other);
+        for (int row = 0; row < rows; row++)
         {
-            for (int row = 0; row < rows; row++)
+            for (int col = 0; col < columns; col++)
             {
-                result.elements[col][row] += other.elements[col][row];
+                result.elements[row][col] += other.elements[row][col];
             }
         }
         return result;
@@ -80,11 +86,11 @@ Matrix Matrix::operator-(const Matrix &other) const
     if (columns == other.columns && rows == other.rows)
     {
         Matrix result(columns, rows);
-        for (int col = 0; col < columns; col++)
+        for (int row = 0; row < rows; row++)
         {
-            for (int row = 0; row < rows; row++)
+            for (int col = 0; col < columns; col++)
             {
-                result.elements[col][row] -= other.elements[col][row];
+                result.elements[row][col] -= other.elements[row][col];
             }
         }
         return result;
@@ -101,17 +107,7 @@ Matrix Matrix::operator*(const Matrix &other) const
     if (columns == other.rows)
     {
         Matrix result(other.columns, rows);
-        for (int m = 0; m < rows; m++)
-        {
-            for (int r = 0; r < other.columns; r++)
-            {
-                result.elements[r][m] = 0;
-                for (int k = 0; k < other.rows; k++)
-                {
-                    result.elements[r][m] += elements[k][m] * other.elements[r][k];
-                }
-            }
-        }
+        
         return result;
     }
     else
@@ -145,11 +141,11 @@ Matrix &Matrix::operator-=(const Matrix &other)
 {
     if (columns == other.columns && rows == other.rows)
     {
-        for (int col = 0; col < columns; col++)
+        for (int row = 0; row < rows; row++)
         {
-            for (int row = 0; row < rows; row++)
+            for (int col = 0; col < columns; col++)
             {
-                elements[col][row] -= other.elements[col][row];
+                elements[row][col] -= other.elements[row][col];
             }
         }
         return *this;
@@ -175,11 +171,11 @@ bool Matrix::operator==(const Matrix &other) const
 {
     if (columns == other.columns && rows == other.rows)
     {
-        for (int col = 0; col < columns; col++)
+        for (int row = 0; row < rows; row++)
         {
-            for (int row = 0; row < rows; row++)
+            for (int col = 0; col < columns; col++)
             {
-                if (elements[col][row] != other.elements[col][row])
+                if (elements[row][col] != other.elements[row][col])
                     return false;
             }
         }
@@ -195,11 +191,11 @@ bool Matrix::operator!=(const Matrix &other) const
 {
     if (columns == other.columns && rows == other.rows)
     {
-        for (int col = 0; col < columns; col++)
+        for (int row = 0; row < rows; row++)
         {
-            for (int row = 0; row < rows; row++)
+            for (int col = 0; col < columns; col++)
             {
-                if (elements[col][row] != other.elements[col][row])
+                if (elements[row][col] != other.elements[row][col])
                     return true;
             }
         }
@@ -213,70 +209,14 @@ bool Matrix::operator!=(const Matrix &other) const
 
 ostream &operator<<(ostream &os, const Matrix &other)
 {
-    for (int col = 0; col < other.columns; col++)
+    for (int row = 0; row < other.rows; row++)
     {
-        for (int row = 0; row < other.rows; row++)
+        for (int col = 0; col < other.columns; col++)
         {
-            os << other.elements[col][row] << " ";
+            os << other.elements[row][col] << " ";
         }
         os << endl;
     }
     return os;
 }
 
-Matrix operator+(double num, const Matrix &obj)
-{
-    if (obj.columns == 1 && obj.rows == 1)
-    {
-        Matrix result(1, 1);
-        result.elements[0][0] = obj.elements[0][0] + num;
-        return result;
-    }
-    else
-        return Matrix(obj);
-    // raise exception
-}
-
-Matrix operator-(double num, const Matrix &obj)
-{
-    if (obj.columns == 1 && obj.rows == 1)
-    {
-        Matrix result(1, 1);
-        result.elements[0][0] = num - obj.elements[0][0];
-        return result;
-    }
-    else
-        return Matrix(obj);
-    // raise exception
-}
-
-Matrix operator*(double num, const Matrix &obj)
-{
-    Matrix result(obj);
-    for (int col = 0; col < result.columns; col++)
-    {
-        for (int row = 0; row < result.rows; row++)
-        {
-            result.elements[col][row] += num;
-        }
-    }
-    return result;
-}
-
-bool operator==(double num, const Matrix &obj)
-{
-    if (obj.columns != 1 || obj.rows != 1)
-        return false;
-    else if (obj.elements[0][0] != num)
-        return false;
-    return true;
-}
-
-bool operator!=(double num, const Matrix &obj)
-{
-    if (obj.columns != 1 || obj.rows != 1)
-        return true;
-    else if (obj.elements[0][0] != num)
-        return true;
-    return false;
-}

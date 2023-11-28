@@ -22,10 +22,5 @@ public:
     bool operator!=(const Matrix &other) const;
 
     friend std::ostream &operator<<(std::ostream &os, const Matrix &other);
-    friend Matrix operator+(double num, const Matrix &obj);
-    friend Matrix operator-(double num, const Matrix &obj);
-    friend Matrix operator*(double num, const Matrix &obj);
-    friend bool operator==(double num, const Matrix &obj);
-    friend bool operator!=(double num, const Matrix &obj);
 };
 

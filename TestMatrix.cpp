@@ -25,10 +25,17 @@ void testAssigment()
 
 void testAddition()
 {
-    Matrix m1(3, 5);
-    Matrix m2(3, 5);
-    Matrix m3(4, 4);
-    cout<<m1;
+    Matrix m1(7, 7);
+    Matrix m2(2, 5);
+    Matrix m3(7, 7);
+
+    cout << "Matrix m1:" << endl;
+    cout << m1 << endl;
+    cout << "Matrix m2:" << endl;
+    cout << m2 << endl;
+    cout << "Matrix m3:" << endl;
+    cout << m3 + m1 << endl;
+
 }
 
 void testSubtraction()

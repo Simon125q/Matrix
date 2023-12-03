@@ -27,9 +27,6 @@ public:
     int getRowsNum() const;
     int getColsNum() const;
 
-    double read(unsigned int r, unsigned int c) const;
-    double write(unsigned int r, unsigned int c, double elem);
-
     double operator()(unsigned int r, unsigned int c) const;
     Mref operator()(unsigned int r, unsigned int c);
 

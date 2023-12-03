@@ -4,16 +4,6 @@
 
 using namespace std;
 
-/*
-	-> DONE exceptions
-	-> DONE detach() investigation
-	-> DONE basic arithmetic operators
-	-> DONE copy constructor and assignment operator =
-	-> DONE comparison operator ==
-	-> DONE display operator <<
-	-> DONE ability to read matrix from input file stream
-	-> DONE single element access
-*/
 
 int main (int argc, char const *argv[]) {
 	Matrix a, b(2, 2);

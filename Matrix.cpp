@@ -60,6 +60,7 @@ Matrix Matrix::operator+(const Matrix &other) const
         throw UnevenMatrixDimensions();
     }
 }
+
 Matrix Matrix::operator-(const Matrix &other) const
 {
     if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
@@ -71,7 +72,11 @@ Matrix Matrix::operator-(const Matrix &other) const
         throw UnevenMatrixDimensions();
     }
 }
-Matrix Matrix::operator*(const Matrix &other) const {}
+
+Matrix Matrix::operator*(const Matrix &other) const
+{
+    return;
+}
 
 Matrix &Matrix::operator+=(const Matrix &other)
 {
@@ -111,7 +116,10 @@ Matrix &Matrix::operator-=(const Matrix &other)
     return *this;
 }
 
-Matrix &Matrix::operator*=(const Matrix &other) {}
+Matrix &Matrix::operator*=(const Matrix &other) 
+{
+    return;
+}
 
 bool Matrix::operator==(const Matrix &other) const
 {
@@ -132,6 +140,7 @@ bool Matrix::operator==(const Matrix &other) const
     }
     return true;
 }
+
 bool Matrix::operator!=(const Matrix &other) const
 {
     if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
@@ -192,7 +201,11 @@ ostream &operator<<(std::ostream &os, const Matrix &obj)
     }
     return os;
 }
-istream &operator>>(std::istream &is, Matrix &obj) {}
+istream &operator>>(std::istream &is, Matrix &obj) 
+{
+    
+    return is;
+}
 
 // rcdata definitions
 
@@ -209,16 +222,16 @@ Matrix::rcdata::rcdata(unsigned int rows_no, unsigned int cols_no)
     }
 }
 
-Matrix::rcdata::rcdata(const rcdata & other) {
+Matrix::rcdata::rcdata(const rcdata &other) // ------->
+{
     if (rccounter == 1)
     {
         for (int row = 0; row < rows; row++)
         {
             delete[] elements[row];
         }
-        delete[] elements;   
+        delete[] elements;
     }
-
 }
 
 Matrix::rcdata::~rcdata()
@@ -230,14 +243,15 @@ Matrix::rcdata::~rcdata()
     delete[] elements;
 }
 
-Matrix::rcdata &Matrix::rcdata::operator=(const Matrix::rcdata &other) {
+Matrix::rcdata &Matrix::rcdata::operator=(const Matrix::rcdata &other) //----->
+{
     if (rccounter == 1)
     {
         for (int row = 0; row < rows; row++)
         {
             delete[] elements[row];
         }
-        delete[] elements;   
+        delete[] elements;
     }
     rows = other.rows;
 

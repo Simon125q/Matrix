@@ -1,49 +1,64 @@
-#include <iostream>
 #include "Matrix.h"
+#include <iostream>
+#include <fstream>
 
 using namespace std;
 
-void testAssigment();
-void testAddition();
-void testSubtraction();
-void testMultiplication();
+/*
+	-> DONE exceptions
+	-> DONE detach() investigation
+	-> DONE basic arithmetic operators
+	-> DONE copy constructor and assignment operator =
+	-> DONE comparison operator ==
+	-> DONE display operator <<
+	-> DONE ability to read matrix from input file stream
+	-> DONE single element access
+*/
 
-int main()
-{
-    testAssigment();
-    testAddition();
-    testSubtraction();
-    testMultiplication();
+int main (int argc, char const *argv[]) {
+	Matrix a, b(2, 2);
 
-    return 0;
-}
+	ifstream filea("m1.txt");
+	filea >> a;
 
-void testAssigment()
-{
-    return;
-}
+	b(0, 0) = 1;
+	b(0, 1) = 1;
+	b(1, 0) = 1;
+	b(1, 1) = 1;
 
-void testAddition()
-{
-    Matrix m1(7, 7);
-    Matrix m2(2, 5);
-    Matrix m3(7, 7);
+	cout << "a: " << endl << a << endl;
+	cout << "b: " << endl << b << endl;
 
-    cout << "Matrix m1:" << endl;
-    cout << m1 << endl;
-    cout << "Matrix m2:" << endl;
-    cout << m2 << endl;
-    cout << "Matrix m3:" << endl;
-    cout << m3 + m1 << endl;
+	Matrix c(2, 2), d(a), e(a);
+	c = a - b;
+	a -= b;
 
-}
+	cout << "AFTER:" << endl;
+	cout << "a: " << endl << a << endl;
+	cout << "b: " << endl << b << endl;
+	cout << "c: " << endl << c << endl;
+	cout << "d: " << endl << d << endl;
+	cout << "e: " << endl << e << endl;
 
-void testSubtraction()
-{
-    return;
-}
+	Matrix x, y, z(2, 2), w(3, 8);
+	ifstream filex("m2.txt");
+	ifstream filey("m3.txt");
 
-void testMultiplication()
-{
-    return;
+	filex >> x;
+	filey >> y;
+
+	z = x * y;
+	x *= y;
+	cout << "x: "<< endl << x << endl;
+	cout << "y: "<< endl << y << endl;
+	cout << "z: "<< endl << z << endl;
+
+	cout << "x == y: " << (x == y) << endl;
+	cout << "x != y: " << (x != y) << endl;
+
+	filea.close();
+	filex.close();
+	filey.close();
+
+	return 0;
 }

@@ -16,4 +16,4 @@ clean:
 
 .PHONY: check
 check: $(executable)
-	valgrind --leak-check=full --track-origins=yes ./$(executable)
+	valgrind --leak-check=full --track-origins=yes -s ./$(executable)

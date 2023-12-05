@@ -1,15 +1,18 @@
 #pragma once
 
+#include <iostream>
+
 class Matrix
 {
+    class Mref;
     struct rcdata;
-    class MatrixIndexOutOfRange;
-    class UnevenMatrixDimensions;
+    struct MatrixIndexOutOfRangeException;
+    struct UnevenMatrixDimensionsException;
+    struct WrongDataTypeException;
     rcdata *data;
 
 public:
-    class Mref;
-    Matrix();
+    
     Matrix(unsigned int rows_num, unsigned int cols_num);
     Matrix(const Matrix &other);
     ~Matrix();
@@ -24,8 +27,8 @@ public:
     bool operator==(const Matrix &other) const;
     bool operator!=(const Matrix &other) const;
 
-    int getRowsNum() const;
-    int getColsNum() const;
+    unsigned int getRowsNum() const;
+    unsigned int getColsNum() const;
 
     double operator()(unsigned int r, unsigned int c) const;
     Mref operator()(unsigned int r, unsigned int c);
@@ -64,18 +67,25 @@ public:
     Matrix::Mref &operator=(const Mref &ref);
 };
 
-class Matrix::MatrixIndexOutOfRange : public exception
-{
+struct Matrix::MatrixIndexOutOfRangeException : public std::exception {
     const char *what() const throw()
     {
         return "Index is out of matrix range";
     }
 };
 
-class Matrix::UnevenMatrixDimensions : public exception
+struct Matrix::UnevenMatrixDimensionsException : public std::exception
 {
     const char *what() const throw()
     {
         return "Operation connot be done, matrices have different dimensions";
+    }
+};
+
+struct Matrix::WrongDataTypeException : public std::exception
+{
+    const char *what() const throw()
+    {
+        return "Element connot be added. Wrong data type";
     }
 };

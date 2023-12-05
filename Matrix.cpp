@@ -7,31 +7,34 @@ using namespace std;
 
 // Matrix definitions
 
-Matrix::Matrix()
-{
-    data = new rcdata(0, 0);
-}
-
 Matrix::Matrix(unsigned int rows_num, unsigned int cols_num)
 {
-    data = new rcdata(rows_num, cols_num);
+    cout << "Matrix created" << endl;
+    rcdata *new_data = new rcdata(rows_num, cols_num);
+    data = new_data;
 }
 
 Matrix::Matrix(const Matrix &other)
 {
-    data->rccounter++;
+    cout << "matrix created pointing to other matrix data" << endl;
     data = other.data;
+    data->rccounter++;
 }
 
 Matrix::~Matrix()
 {
+
     data->rccounter--;
+    cout<< "rccounter: "<<data->rccounter<<endl;
     if (data->rccounter == 0)
     {
+        cout << "Matrix destroyed" << endl;
+        
         delete data;
     }
     else
     {
+        cout << "Matrix nulled" << endl;
         data = nullptr;
     }
 }
@@ -57,7 +60,7 @@ Matrix Matrix::operator+(const Matrix &other) const
     }
     else
     {
-        throw UnevenMatrixDimensions();
+        throw UnevenMatrixDimensionsException();
     }
 }
 
@@ -69,13 +72,13 @@ Matrix Matrix::operator-(const Matrix &other) const
     }
     else
     {
-        throw UnevenMatrixDimensions();
+        throw UnevenMatrixDimensionsException();
     }
 }
 
 Matrix Matrix::operator*(const Matrix &other) const
 {
-    return;
+    return Matrix(0, 0);
 }
 
 Matrix &Matrix::operator+=(const Matrix &other)
@@ -83,51 +86,53 @@ Matrix &Matrix::operator+=(const Matrix &other)
     if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
     {
         data = data->detach();
-        for (int row = 0; row < this->getRowsNum(); row++)
+        for (unsigned int row = 0; row < this->getRowsNum(); row++)
         {
-            for (int col = 0; col < this->getColsNum(); col++)
+            for (unsigned int col = 0; col < this->getColsNum(); col++)
             {
                 data->elements[row][col] += other.data->elements[row][col];
             }
         }
     }
     else
-        throw Matrix::UnevenMatrixDimensions();
+        throw Matrix::UnevenMatrixDimensionsException();
 
     return *this;
 }
 
 Matrix &Matrix::operator-=(const Matrix &other)
 {
+    cout << "subtraction (-=)" << endl;
+
     if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
     {
         data = data->detach();
-        for (int row = 0; row < this->getRowsNum(); row++)
+        for (unsigned int row = 0; row < this->getRowsNum(); row++)
         {
-            for (int col = 0; col < this->getColsNum(); col++)
+            for (unsigned int col = 0; col < this->getColsNum(); col++)
             {
                 data->elements[row][col] -= other.data->elements[row][col];
             }
         }
     }
     else
-        throw Matrix::UnevenMatrixDimensions();
+        throw Matrix::UnevenMatrixDimensionsException();
 
     return *this;
 }
 
-Matrix &Matrix::operator*=(const Matrix &other) 
+Matrix &Matrix::operator*=(const Matrix &other)
 {
-    return;
+    return *this;
 }
 
 bool Matrix::operator==(const Matrix &other) const
 {
     if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
     {
-        for (int row = 0; row < this->getRowsNum(); row++)
+        for (unsigned int row = 0; row < this->getRowsNum(); row++)
         {
-            for (int col = 0; col < this->getColsNum(); col++)
+            for (unsigned int col = 0; col < this->getColsNum(); col++)
             {
                 if (data->elements[row][col] != other.data->elements[row][col])
                     return false;
@@ -145,9 +150,9 @@ bool Matrix::operator!=(const Matrix &other) const
 {
     if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
     {
-        for (int row = 0; row < this->getRowsNum(); row++)
+        for (unsigned int row = 0; row < this->getRowsNum(); row++)
         {
-            for (int col = 0; col < this->getColsNum(); col++)
+            for (unsigned int col = 0; col < this->getColsNum(); col++)
             {
                 if (data->elements[row][col] != other.data->elements[row][col])
                     return true;
@@ -161,12 +166,12 @@ bool Matrix::operator!=(const Matrix &other) const
     return false;
 }
 
-int Matrix::getRowsNum() const
+unsigned int Matrix::getRowsNum() const
 {
     return data->rows;
 }
 
-int Matrix::getColsNum() const
+unsigned int Matrix::getColsNum() const
 {
     return data->cols;
 }
@@ -175,7 +180,7 @@ double Matrix::operator()(unsigned int r, unsigned int c) const
 {
     if (r > this->getRowsNum() || c > this->getColsNum())
     {
-        throw Matrix::MatrixIndexOutOfRange();
+        throw Matrix::MatrixIndexOutOfRangeException();
     }
     return data->elements[r][c];
 }
@@ -184,16 +189,16 @@ Matrix::Mref Matrix::operator()(unsigned int r, unsigned int c)
 {
     if (r > this->getRowsNum() || c > this->getColsNum())
     {
-        throw Matrix::MatrixIndexOutOfRange();
+        throw Matrix::MatrixIndexOutOfRangeException();
     }
     return Mref(*this, r, c);
 }
 
 ostream &operator<<(std::ostream &os, const Matrix &obj)
 {
-    for (int row = 0; row < obj.getRowsNum(); row++)
+    for (unsigned int row = 0; row < obj.getRowsNum(); row++)
     {
-        for (int col = 0; col < obj.getColsNum(); col++)
+        for (unsigned int col = 0; col < obj.getColsNum(); col++)
         {
             os << obj.data->elements[row][col] << " ";
         }
@@ -201,9 +206,17 @@ ostream &operator<<(std::ostream &os, const Matrix &obj)
     }
     return os;
 }
-istream &operator>>(std::istream &is, Matrix &obj) 
+
+istream &operator>>(std::istream &is, Matrix &obj)
 {
-    
+    for (unsigned int row = 0; row < obj.getRowsNum(); row++)
+    {
+        for (unsigned int col = 0; col < obj.getColsNum(); col++)
+        {
+            if (!(is >> obj.data->elements[row][col]))
+                throw Matrix::WrongDataTypeException();
+        }
+    }
     return is;
 }
 
@@ -211,32 +224,44 @@ istream &operator>>(std::istream &is, Matrix &obj)
 
 Matrix::rcdata::rcdata(unsigned int rows_no, unsigned int cols_no)
 {
+    cout << "rcdata created" << endl;
     rows = rows_no;
     cols = cols_no;
     rccounter = 1;
 
-    elements = new double *[rows];
-    for (int row; row < rows; row++)
+    elements = new double *[rows] {};
+    for (unsigned int row = 0; row < rows; row++)
     {
-        elements[row] = new double[cols];
+        elements[row] = new double[cols]{};
     }
 }
 
 Matrix::rcdata::rcdata(const rcdata &other) // ------->
 {
-    if (rccounter == 1)
+    cout << "rcdata created based on other" << endl;
+    rows = other.rows;
+    cols = other.cols;
+    rccounter = 1;
+
+    elements = new double *[rows] {};
+    for (unsigned int row = 0; row < rows; row++)
     {
-        for (int row = 0; row < rows; row++)
+        elements[row] = new double[cols]{};
+    }
+
+    for (unsigned int row = 0; row < rows; row++)
+    {
+        for (unsigned int col = 0; col < cols; col++)
         {
-            delete[] elements[row];
+            elements[row][col] = other.elements[row][col];
         }
-        delete[] elements;
     }
 }
 
 Matrix::rcdata::~rcdata()
 {
-    for (int row = 0; row < rows; row++)
+    cout << "rcdata destroyed" << endl;
+    for (unsigned int row = 0; row < rows; row++)
     {
         delete[] elements[row];
     }
@@ -247,15 +272,33 @@ Matrix::rcdata &Matrix::rcdata::operator=(const Matrix::rcdata &other) //----->
 {
     if (rccounter == 1)
     {
-        for (int row = 0; row < rows; row++)
+        for (unsigned int row = 0; row < rows; row++)
         {
             delete[] elements[row];
         }
         delete[] elements;
     }
-    rows = other.rows;
+    else
+        rccounter--;
 
-    elements = other.elements;
+    rows = other.rows;
+    cols = other.cols;
+
+    elements = new double *[rows] {};
+    for (unsigned int row = 0; row < rows; row++)
+    {
+        elements[row] = new double[cols]{};
+    }
+
+    for (unsigned int row = 0; row < rows; row++)
+    {
+        for (unsigned int col = 0; col < cols; col++)
+        {
+            elements[row][col] = other.elements[row][col];
+        }
+    }
+
+    return *this;
 }
 
 Matrix::rcdata *Matrix::rcdata::detach()
@@ -265,11 +308,13 @@ Matrix::rcdata *Matrix::rcdata::detach()
         return this;
     }
 
+    rccounter--;
+    
     rcdata *new_data = new rcdata(rows, cols);
 
-    for (int row = 0; row < rows; row++)
+    for (unsigned int row = 0; row < rows; row++)
     {
-        for (int col = 0; col < cols; col++)
+        for (unsigned int col = 0; col < cols; col++)
         {
             new_data->elements[row][col] = elements[row][col];
         }
@@ -289,6 +334,7 @@ Matrix::Mref &Matrix::Mref::operator=(double elem)
 {
     m.data = m.data->detach();
     m.data->elements[r][c] = elem;
+    return *this;
 }
 
-Matrix::Mref &Matrix::Mref::operator=(const Mref &ref) {}
+// Matrix::Mref &Matrix::Mref::operator=(const Mref &ref) {}

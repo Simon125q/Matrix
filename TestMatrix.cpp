@@ -6,7 +6,8 @@ using namespace std;
 
 
 int main (int argc, char const *argv[]) {
-	Matrix a, b(2, 2);
+	Matrix a(2, 2);
+	Matrix b(2, 2);
 
 	ifstream filea("m1.txt");
 	filea >> a;
@@ -19,7 +20,9 @@ int main (int argc, char const *argv[]) {
 	cout << "a: " << endl << a << endl;
 	cout << "b: " << endl << b << endl;
 
-	Matrix c(2, 2), d(a), e(a);
+	Matrix c(2, 2);
+	Matrix d(a);
+	Matrix e(b);
 	c = a - b;
 	a -= b;
 
@@ -30,18 +33,19 @@ int main (int argc, char const *argv[]) {
 	cout << "d: " << endl << d << endl;
 	cout << "e: " << endl << e << endl;
 
-	Matrix x, y, z(2, 2), w(3, 8);
+	Matrix x(5, 6), y(3, 4), z(a), w(a);
 	ifstream filex("m2.txt");
 	ifstream filey("m3.txt");
 
 	filex >> x;
 	filey >> y;
 
-	z = x * y;
-	x *= y;
+	//z = x * y;
+	//x *= y;
 	cout << "x: "<< endl << x << endl;
 	cout << "y: "<< endl << y << endl;
 	cout << "z: "<< endl << z << endl;
+	cout << "w: "<< endl << w << endl;
 
 	cout << "x == y: " << (x == y) << endl;
 	cout << "x != y: " << (x != y) << endl;

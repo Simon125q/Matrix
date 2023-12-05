@@ -25,11 +25,11 @@ Matrix::~Matrix()
 {
 
     data->rccounter--;
-    cout<< "rccounter: "<<data->rccounter<<endl;
+    cout << "rccounter: " << data->rccounter << endl;
     if (data->rccounter == 0)
     {
         cout << "Matrix destroyed" << endl;
-        
+
         delete data;
     }
     else
@@ -78,7 +78,29 @@ Matrix Matrix::operator-(const Matrix &other) const
 
 Matrix Matrix::operator*(const Matrix &other) const
 {
-    return Matrix(0, 0);
+    unsigned int r1 = this->getRowsNum();
+    unsigned int c1 = this->getColsNum();
+    unsigned int r2 = other.getRowsNum();
+    unsigned int c2 = other.getColsNum();
+    Matrix result(r1, c2);
+    if (c1 == r2)
+    {
+        for (unsigned int row1 = 0; row1 < r1; row1++)
+        {
+            for (unsigned int col2 = 0; col2 < c2; col2++)
+            {
+                result.data->elements[row1][col2] = 0;
+                for (unsigned int row2 = 0; row2 < r2; row2++)
+                {
+                    result.data->elements[row1][col2] += data->elements[row1][row2] * other.data->elements[row2][col2];
+                }
+            }
+        }
+    }
+    else
+        throw Matrix::UnevenMatrixDimensionsException();
+
+    return result;
 }
 
 Matrix &Matrix::operator+=(const Matrix &other)
@@ -123,6 +145,31 @@ Matrix &Matrix::operator-=(const Matrix &other)
 
 Matrix &Matrix::operator*=(const Matrix &other)
 {
+    unsigned int r1 = this->getRowsNum();
+    unsigned int c1 = this->getColsNum();
+    unsigned int r2 = other.getRowsNum();
+    unsigned int c2 = other.getColsNum();    
+    
+    Matrix result(r1, c2);
+    if (c1 == r2)
+    {
+        for (unsigned int row1 = 0; row1 < r1; row1++)
+        {
+            for (unsigned int col2 = 0; col2 < c2; col2++)
+            {
+                result.data->elements[row1][col2] = 0;
+                for (unsigned int row2 = 0; row2 < r2; row2++)
+                {
+                    result.data->elements[row1][col2] += data->elements[row1][row2] * other.data->elements[row2][col2];
+                }
+            }
+        }
+    }
+    else
+        throw Matrix::UnevenMatrixDimensionsException();
+
+    *this = result;
+
     return *this;
 }
 
@@ -309,7 +356,7 @@ Matrix::rcdata *Matrix::rcdata::detach()
     }
 
     rccounter--;
-    
+
     rcdata *new_data = new rcdata(rows, cols);
 
     for (unsigned int row = 0; row < rows; row++)

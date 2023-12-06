@@ -15,7 +15,7 @@ Matrix::Matrix(unsigned int rows_num, unsigned int cols_num)
     try
     {
         rcdata *new_data = new rcdata(rows_num, cols_num);
-        data = new_data
+        data = new_data;
     }
     catch (bad_alloc &bae)
     {
@@ -459,25 +459,26 @@ Matrix::rcdata *Matrix::rcdata::detach()
         return this;
     }
 
-    rccounter--;
     try
     {
+        rccounter--;
         rcdata *new_data = new rcdata(rows, cols);
+    
+        for (unsigned int row = 0; row < rows; row++)
+        {
+            for (unsigned int col = 0; col < cols; col++)
+            {
+                new_data->elements[row][col] = elements[row][col];
+            }
+        }
+
+        return new_data;
     }
     catch (bad_alloc &bae)
     {
         cerr << "bad_alloc detected: " << bae.what() << endl;
         exit(ERROR);
     }
-    for (unsigned int row = 0; row < rows; row++)
-    {
-        for (unsigned int col = 0; col < cols; col++)
-        {
-            new_data->elements[row][col] = elements[row][col];
-        }
-    }
-
-    return new_data;
 }
 
 // Mref definitions

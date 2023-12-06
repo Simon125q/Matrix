@@ -4,78 +4,152 @@
 
 using namespace std;
 
+void display(const Matrix &m1, const Matrix &m2, const Matrix &m3);
+void test();
+void testAddition(const Matrix &m1, const Matrix &m2, const Matrix &m3);
+void testSubtraction(const Matrix &m1, const Matrix &m2, const Matrix &m3);
+void testMultiplication(const Matrix &m1, const Matrix &m2, const Matrix &m3);
+void testBooleanExpressions(const Matrix &m1, const Matrix &m2, const Matrix &m3);
+void testSingleElementAccess(const Matrix &m1, const Matrix &m2, const Matrix &m3);
+
 int main(int argc, char const *argv[])
 {
-	Matrix a(2, 2);
-	Matrix b(2, 2);
-
-	ifstream filea("m1.txt");
-	filea >> a;
-
-	b(0, 0) = 1;
-	b(0, 1) = 1;
-	b(1, 0) = 1;
-	b(1, 1) = 1;
-
-	cout << "a: " << endl
-		 << a << endl;
-	cout << "b: " << endl
-		 << b << endl;
-
-	Matrix c(2, 2);
-	Matrix d(a);
-	Matrix e(b);
-	c = a - b;
-	a -= b;
-
-	cout << "AFTER:" << endl;
-	cout << "a: " << endl
-		 << a << endl;
-	cout << "b: " << endl
-		 << b << endl;
-	cout << "c: " << endl
-		 << c << endl;
-	cout << "d: " << endl
-		 << d << endl;
-	cout << "e: " << endl
-		 << e << endl;
-
-	Matrix x(5, 6), y(6, 4), z(a), w(a);
-	ifstream filex("m2.txt");
-	ifstream filey("m3.txt");
-
-	filex >> x;
-	filey >> y;
-
-	cout << "BEFORE" << endl;
-	cout << "x: " << endl
-		 << x << endl;
-	cout << "y: " << endl
-		 << y << endl;
-	cout << "z: " << endl
-		 << z << endl;
-	cout << "w: " << endl
-		 << w << endl;
-
-	z = x * y;
-	x *= y;
-
-	cout << "AFTER" << endl;
-	cout << "x: " << endl
-		 << x << endl;
-	cout << "y: " << endl
-		 << y << endl;
-	cout << "z: " << endl
-		 << z << endl;
-	cout << "w: " << endl
-		 << w << endl;
-
-	cout << "x == y: " << (x == y) << endl;
-	cout << "x != y: " << (x != y) << endl;
-
-	filea.close();
-	filex.close();
-	filey.close();
-
+	test();
 	return 0;
+}
+
+void display(const Matrix &m1, const Matrix &m2, const Matrix &m3)
+{
+	cout << "m1: " << endl
+		 << m1 << endl;
+	cout << "m2: " << endl
+		 << m2 << endl;
+	cout << "m3: " << endl
+		 << m3 << endl;
+}
+
+void test()
+{
+	cout << "creating matrices" << endl;
+	Matrix m1(3, 4);
+	Matrix m2(5, 6);
+	Matrix m3(6, 4);
+	Matrix m4(3, 4);
+	Matrix m5(2, 2);
+	Matrix m6(2, 2);
+
+	ifstream filem1("m1.txt");
+	filem1 >> m1;
+	ifstream filem2("m2.txt");
+	filem2 >> m2;
+	ifstream filem3("m3.txt");
+	filem3 >> m3;
+	ifstream filem4("m4.txt");
+	filem4 >> m4;
+	ifstream filem5("m5.txt");
+	filem5 >> m5;
+	m6(0, 0) = 2;
+	m6(0, 1) = 6;
+	m6(1, 0) = 1;
+	m6(1, 1) = 9;
+	display(m1, m2, m3);
+	display(m4, m5, m6);
+	testAddition(m1, m4, m6);
+	testSubtraction(m1, m4, m6);
+	testMultiplication(m2, m3, m5);
+	testBooleanExpressions(m1, m4, m3);
+	testSingleElementAccess(m1, m4, m6);
+	filem1.close();
+	filem2.close();
+	filem3.close();
+	filem4.close();
+	filem5.close();
+}
+
+void testAddition(const Matrix &m1, const Matrix &m2, const Matrix &m3)
+{
+	cout << "Testing addition" << endl;
+	display(m1, m2, m3);
+	Matrix res = m1 + m2;
+	cout << "Sum of matrices m1 and m2: " << endl
+		 << res << endl;
+	Matrix m4(m3);
+	cout << "m4: " << endl
+		 << m4 << endl;
+	m4 += m3;
+	cout << "Matrix m4 after adding m3: " << endl
+		 << m4 << endl;
+}
+
+void testSubtraction(const Matrix &m1, const Matrix &m2, const Matrix &m3)
+{
+	cout << "Testing subtraction" << endl;
+	display(m1, m2, m3);
+	Matrix res = m1 - m2;
+	cout << "Difference of matrices m1 and m2: " << endl
+		 << res << endl;
+	cout << "Difference of matrices m1 and m1: " << endl
+		 << m1 - m1 << endl;
+	Matrix m4(m3);
+	cout << "m4: " << endl
+		 << m4 << endl;
+	m4 -= m3;
+	cout << "Matrix m4 after subtracting m3: " << endl
+		 << m4 << endl;
+}
+
+void testMultiplication(const Matrix &m1, const Matrix &m2, const Matrix &m3)
+{
+	cout << "Testing multiplication" << endl;
+	display(m1, m2, m3);
+	Matrix res = m1 * m2;
+	cout << "Product of matrices m1 and m2: " << endl
+		 << res << endl;
+	cout << "Product of matrices m3 and m3: " << endl
+		 << m3 * m3 << endl;
+	Matrix m4(m3);
+	cout << "m4: " << endl
+		 << m4 << endl;
+	m4 *= m3;
+	cout << "Matrix m4 after multiplaying by m3: " << endl
+		 << m4 << endl;
+}
+
+void testBooleanExpressions(const Matrix &m1, const Matrix &m2, const Matrix &m3)
+{
+	cout << "Testing Boolean Expressions" << endl;
+	display(m1, m2, m3);
+	cout << boolalpha << "m1 == m2: " << (m1 == m2) << endl;
+	cout << "m1 != m2: " << (m1 != m2) << endl;
+	cout << "m2 == m3: " << (m2 == m3) << endl;
+	cout << "m2 != m3: " << (m2 != m3) << endl;
+	Matrix m4 = m2;
+	cout << "Matrix m4: " << endl
+		 << m4 << endl;
+	cout << "m2 == m4: " << (m2 == m4) << endl;
+	cout << "m2 != m4: " << (m2 != m4) << endl;
+}
+
+void testSingleElementAccess(const Matrix &m1, const Matrix &m2, const Matrix &m3)
+{
+	cout << "Testing single element access" << endl;
+	display(m1, m2, m3);
+	cout << "m1[2][3] = " << m1(2, 3) << endl;
+	cout << "m2[1][2] = " << m1(1, 2) << endl;
+	cout << "m3[0][1] = " << m1(0, 1) << endl;
+	Matrix m4(m1), m5(m3);
+	cout << "Before modification:" << endl;
+	cout << "m4: " << endl
+		 << m4 << endl;
+	cout << "m5: " << endl
+		 << m5 << endl;
+	m4(2, 2) = 23;
+	m4(0, 1) = 0;
+	m5(0, 0) = 10;
+	m5(1, 1) = 99;
+	cout << "After modification:" << endl;
+	cout << "m4: " << endl
+		 << m4 << endl;
+	cout << "m5: " << endl
+		 << m5 << endl;
 }

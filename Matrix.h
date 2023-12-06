@@ -5,7 +5,7 @@
 class Matrix
 {
     class Mref;
-    struct rcdata;
+    class rcdata;
     struct MatrixIndexOutOfRangeException;
     struct UnevenMatrixDimensionsException;
     struct WrongDataTypeException;
@@ -37,7 +37,7 @@ public:
     friend std::istream &operator>>(std::istream &is, Matrix &obj);
 };
 
-struct Matrix::rcdata
+class Matrix::rcdata
 {
 
 public:
@@ -64,7 +64,6 @@ class Matrix::Mref
 public:
     operator double() const;
     Matrix::Mref &operator=(double elem);
-    Matrix::Mref &operator=(const Mref &ref);
 };
 
 struct Matrix::MatrixIndexOutOfRangeException : public std::exception {

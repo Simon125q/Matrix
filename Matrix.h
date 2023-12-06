@@ -12,7 +12,6 @@ class Matrix
     rcdata *data;
 
 public:
-    
     Matrix(unsigned int rows_num, unsigned int cols_num);
     Matrix(const Matrix &other);
     ~Matrix();
@@ -66,7 +65,8 @@ public:
     Matrix::Mref &operator=(double elem);
 };
 
-struct Matrix::MatrixIndexOutOfRangeException : public std::exception {
+struct Matrix::MatrixIndexOutOfRangeException : public std::exception
+{
     const char *what() const throw()
     {
         return "Index is out of matrix range";

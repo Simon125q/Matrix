@@ -4,7 +4,7 @@
 using namespace std;
 
 #define ERROR 1
-#define TEST 0
+#define TEST 1
 
 // Matrix definitions
 
@@ -463,7 +463,7 @@ Matrix::rcdata *Matrix::rcdata::detach()
     {
         rccounter--;
         rcdata *new_data = new rcdata(rows, cols);
-    
+
         for (unsigned int row = 0; row < rows; row++)
         {
             for (unsigned int col = 0; col < cols; col++)

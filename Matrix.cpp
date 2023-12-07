@@ -4,7 +4,7 @@
 using namespace std;
 
 #define ERROR 1
-#define TEST 1
+#define TEST 0
 
 // Matrix definitions
 
@@ -68,38 +68,26 @@ Matrix &Matrix::operator=(const Matrix &other)
 
 Matrix Matrix::operator+(const Matrix &other) const
 {
-    try
+    
+    if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
     {
-        if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
-        {
-            return (Matrix(*this) += other);
-        }
-        else
-            throw Matrix::UnevenMatrixDimensionsException();
+        return (Matrix(*this) += other);
     }
-    catch (Matrix::UnevenMatrixDimensionsException &umde)
-    {
-        cerr << umde.what() << endl;
-        exit(ERROR);
-    }
+    else
+        throw Matrix::UnevenMatrixDimensionsException();
+    
 }
 
 Matrix Matrix::operator-(const Matrix &other) const
 {
-    try
+
+    if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
     {
-        if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
-        {
-            return (Matrix(*this) -= other);
-        }
-        else
-            throw Matrix::UnevenMatrixDimensionsException();
+        return (Matrix(*this) -= other);
     }
-    catch (Matrix::UnevenMatrixDimensionsException &umde)
-    {
-        cerr << umde.what() << endl;
-        exit(ERROR);
-    }
+    else
+        throw Matrix::UnevenMatrixDimensionsException();
+
 }
 
 Matrix Matrix::operator*(const Matrix &other) const
@@ -109,83 +97,64 @@ Matrix Matrix::operator*(const Matrix &other) const
     unsigned int r2 = other.getRowsNum();
     unsigned int c2 = other.getColsNum();
     Matrix result(r1, c2);
-    try
+    
+    if (c1 == r2)
     {
-        if (c1 == r2)
+        for (unsigned int row1 = 0; row1 < r1; row1++)
         {
-            for (unsigned int row1 = 0; row1 < r1; row1++)
+            for (unsigned int col2 = 0; col2 < c2; col2++)
             {
-                for (unsigned int col2 = 0; col2 < c2; col2++)
+                result.data->elements[row1][col2] = 0;
+                for (unsigned int row2 = 0; row2 < r2; row2++)
                 {
-                    result.data->elements[row1][col2] = 0;
-                    for (unsigned int row2 = 0; row2 < r2; row2++)
-                    {
-                        result.data->elements[row1][col2] += data->elements[row1][row2] * other.data->elements[row2][col2];
-                    }
+                    result.data->elements[row1][col2] += data->elements[row1][row2] * other.data->elements[row2][col2];
                 }
             }
         }
-        else
-            throw Matrix::UnevenMatrixDimensionsException();
     }
-    catch (Matrix::UnevenMatrixDimensionsException &umde)
-    {
-        cerr << umde.what() << endl;
-        exit(ERROR);
-    }
+    else
+        throw Matrix::UnevenMatrixDimensionsException();
+
     return result;
 }
 
 Matrix &Matrix::operator+=(const Matrix &other)
 {
-    try
+
+    if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
     {
-        if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
+        data = data->detach();
+        for (unsigned int row = 0; row < this->getRowsNum(); row++)
         {
-            data = data->detach();
-            for (unsigned int row = 0; row < this->getRowsNum(); row++)
+            for (unsigned int col = 0; col < this->getColsNum(); col++)
             {
-                for (unsigned int col = 0; col < this->getColsNum(); col++)
-                {
-                    data->elements[row][col] += other.data->elements[row][col];
-                }
+                data->elements[row][col] += other.data->elements[row][col];
             }
         }
-        else
-            throw Matrix::UnevenMatrixDimensionsException();
     }
-    catch (Matrix::UnevenMatrixDimensionsException &umde)
-    {
-        cerr << umde.what() << endl;
-        exit(ERROR);
-    }
+    else
+        throw Matrix::UnevenMatrixDimensionsException();
 
     return *this;
 }
 
 Matrix &Matrix::operator-=(const Matrix &other)
 {
-    try
+    
+    if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
     {
-        if (this->getRowsNum() == other.getRowsNum() && this->getColsNum() == other.getColsNum())
+        data = data->detach();
+        for (unsigned int row = 0; row < this->getRowsNum(); row++)
         {
-            data = data->detach();
-            for (unsigned int row = 0; row < this->getRowsNum(); row++)
+            for (unsigned int col = 0; col < this->getColsNum(); col++)
             {
-                for (unsigned int col = 0; col < this->getColsNum(); col++)
-                {
-                    data->elements[row][col] -= other.data->elements[row][col];
-                }
+                data->elements[row][col] -= other.data->elements[row][col];
             }
         }
-        else
-            throw Matrix::UnevenMatrixDimensionsException();
     }
-    catch (Matrix::UnevenMatrixDimensionsException &umde)
-    {
-        cerr << umde.what() << endl;
-        exit(ERROR);
-    }
+    else
+        throw Matrix::UnevenMatrixDimensionsException();
+
 
     return *this;
 }
@@ -197,33 +166,27 @@ Matrix &Matrix::operator*=(const Matrix &other)
     unsigned int r2 = other.getRowsNum();
     unsigned int c2 = other.getColsNum();
 
-    try
+
+    Matrix result(r1, c2);
+    if (c1 == r2)
     {
-        Matrix result(r1, c2);
-        if (c1 == r2)
+        for (unsigned int row1 = 0; row1 < r1; row1++)
         {
-            for (unsigned int row1 = 0; row1 < r1; row1++)
+            for (unsigned int col2 = 0; col2 < c2; col2++)
             {
-                for (unsigned int col2 = 0; col2 < c2; col2++)
+                result.data->elements[row1][col2] = 0;
+                for (unsigned int row2 = 0; row2 < r2; row2++)
                 {
-                    result.data->elements[row1][col2] = 0;
-                    for (unsigned int row2 = 0; row2 < r2; row2++)
-                    {
-                        result.data->elements[row1][col2] += data->elements[row1][row2] * other.data->elements[row2][col2];
-                    }
+                    result.data->elements[row1][col2] += data->elements[row1][row2] * other.data->elements[row2][col2];
                 }
             }
         }
-        else
-            throw Matrix::UnevenMatrixDimensionsException();
+    }
+    else
+        throw Matrix::UnevenMatrixDimensionsException();
 
-        *this = result;
-    }
-    catch (Matrix::UnevenMatrixDimensionsException &umde)
-    {
-        cerr << umde.what() << endl;
-        exit(ERROR);
-    }
+    *this = result;
+
 
     return *this;
 }
@@ -280,36 +243,24 @@ unsigned int Matrix::getColsNum() const
 
 double Matrix::operator()(unsigned int r, unsigned int c) const
 {
-    try
+    
+    if (r > this->getRowsNum() || c > this->getColsNum())
     {
-        if (r > this->getRowsNum() || c > this->getColsNum())
-        {
-            throw Matrix::MatrixIndexOutOfRangeException();
-        }
-        return data->elements[r][c];
+        throw Matrix::MatrixIndexOutOfRangeException();
     }
-    catch (Matrix::MatrixIndexOutOfRangeException &miore)
-    {
-        cerr << miore.what() << endl;
-        exit(ERROR);
-    }
+    return data->elements[r][c];
+
 }
 
 Matrix::Mref Matrix::operator()(unsigned int r, unsigned int c)
 {
-    try
+    
+    if (r > this->getRowsNum() || c > this->getColsNum())
     {
-        if (r > this->getRowsNum() || c > this->getColsNum())
-        {
-            throw Matrix::MatrixIndexOutOfRangeException();
-        }
-        return Mref(*this, r, c);
+        throw Matrix::MatrixIndexOutOfRangeException();
     }
-    catch (Matrix::MatrixIndexOutOfRangeException &miore)
-    {
-        cerr << miore.what() << endl;
-        exit(ERROR);
-    }
+    return Mref(*this, r, c);
+
 }
 
 ostream &operator<<(std::ostream &os, const Matrix &obj)

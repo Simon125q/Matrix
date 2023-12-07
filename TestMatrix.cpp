@@ -11,10 +11,13 @@ void testSubtraction(const Matrix &m1, const Matrix &m2, const Matrix &m3);
 void testMultiplication(const Matrix &m1, const Matrix &m2, const Matrix &m3);
 void testBooleanExpressions(const Matrix &m1, const Matrix &m2, const Matrix &m3);
 void testSingleElementAccess(const Matrix &m1, const Matrix &m2, const Matrix &m3);
+void testExceptions();
 
 int main(int argc, char const *argv[])
 {
+
 	test();
+
 	return 0;
 }
 
@@ -64,6 +67,7 @@ void test()
 	filem3.close();
 	filem4.close();
 	filem5.close();
+	testExceptions();
 }
 
 void testAddition(const Matrix &m1, const Matrix &m2, const Matrix &m3)
@@ -152,4 +156,51 @@ void testSingleElementAccess(const Matrix &m1, const Matrix &m2, const Matrix &m
 		 << m4 << endl;
 	cout << "m5: " << endl
 		 << m5 << endl;
+}
+
+void testExceptions()
+{
+	cout << "Testing exceptions" << endl;
+
+	cout << "Adding matrices with differente dimensions" << endl;
+
+	try
+	{
+		Matrix m1(2, 4), m2(5, 7);
+		Matrix res = m1 + m2;
+		cout << "Test failed" << endl;
+	}
+	catch (Matrix::UnevenMatrixDimensionsException &umde)
+	{
+		cerr << umde.what() << endl;
+		cout << "Test succeded" << endl;
+	}
+
+	cout << "Multiplying matrices with differente dimensions" << endl;
+
+	try
+	{
+		Matrix m1(2, 4), m2(5, 7);
+		Matrix res = m1 * m2;
+		cout << "Test failed" << endl;
+	}
+	catch (Matrix::UnevenMatrixDimensionsException &umde)
+	{
+		cerr << umde.what() << endl;
+		cout << "Test succeded" << endl;
+	}
+
+	cout << "Accessing elements out of range" << endl;
+	
+	try
+	{
+		Matrix m1(2, 4);
+		m1(3, 5) = 8;
+		cout << "Test failed" << endl;
+	}
+	catch (Matrix::MatrixIndexOutOfRangeException &miore)
+	{
+		cerr << miore.what() << endl;
+		cout << "Test succeded" << endl;
+	}
 }

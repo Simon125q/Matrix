@@ -6,9 +6,6 @@ class Matrix
 {
     class Mref;
     class rcdata;
-    struct MatrixIndexOutOfRangeException;
-    struct UnevenMatrixDimensionsException;
-    struct WrongDataTypeException;
     rcdata *data;
 
 public:
@@ -34,6 +31,10 @@ public:
 
     friend std::ostream &operator<<(std::ostream &os, const Matrix &obj);
     friend std::istream &operator>>(std::istream &is, Matrix &obj);
+
+    struct MatrixIndexOutOfRangeException;
+    struct UnevenMatrixDimensionsException;
+    struct WrongDataTypeException;
 };
 
 class Matrix::rcdata
@@ -45,9 +46,9 @@ public:
     unsigned int rows;
     unsigned int cols;
     rcdata(unsigned int rows_no, unsigned int cols_no);
-    rcdata(const rcdata &);
+    rcdata(const rcdata &other);
     ~rcdata();
-    rcdata &operator=(const rcdata &);
+    rcdata &operator=(const rcdata &other);
     rcdata *detach();
 };
 

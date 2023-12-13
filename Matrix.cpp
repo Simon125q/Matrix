@@ -290,7 +290,7 @@ istream &operator>>(std::istream &is, Matrix &obj)
         }
         return is;
     }
-    catch (Matrix::MatrixIndexOutOfRangeException &wdte)
+    catch (Matrix::WrongDataTypeException &wdte)
     {
         cerr << wdte.what() << endl;
         exit(ERROR);
@@ -363,7 +363,7 @@ Matrix::rcdata::~rcdata()
     delete[] elements;
 }
 
-Matrix::rcdata &Matrix::rcdata::operator=(const Matrix::rcdata &other) //----->
+Matrix::rcdata &Matrix::rcdata::operator=(const Matrix::rcdata &other)
 {
     if (rccounter == 1)
     {
